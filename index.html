@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pocket Pixels</title>
+
+    <!-- Clean UI Font + Scrapbook Typography Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- =====================================================
+         HOME / SHELF VIEW
+    ====================================================== -->
+    <section class="view home-view" id="homeView">
+
+        <!-- MODERN TOP NAV -->
+        <header class="shelf-topbar">
+            <div class="top-nav-left">
+                <button class="nav-circle-btn active" id="viewBookMode" title="Cover View" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                </button>
+                <button class="nav-circle-btn" id="viewGridMode" title="Grid View" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                </button>
+            </div>
+
+            <div class="top-nav-right">
+                <button class="nav-circle-btn" id="searchButton" title="Search" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+                <button class="nav-circle-btn" id="brandButton" title="App Info & Menu" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-shelf hidden" id="emptyLibrary">
+            <button class="empty-add-btn" id="emptyAddButton" type="button">
+                <span class="plus-icon">＋</span>
+                <span>Create your first journal</span>
+            </button>
+        </div>
+
+        <!-- JOURNAL SHELF STAGE -->
+        <main class="shelf-stage-wrapper" id="journalLibrary">
+
+            <!-- TITLE & PAGES HEADING -->
+            <div class="shelf-header">
+                <h1 class="shelf-title" id="journalTitle">Journal</h1>
+                <p class="shelf-meta" id="journalPageCount">⊘ 0 Pages</p>
+            </div>
+
+            <!-- CAROUSEL STAGE -->
+            <div class="shelf-carousel" id="coverStage">
+                <!-- PREVIOUS JOURNAL -->
+                <div class="carousel-peek peek-left hidden-preview" id="leftCover">
+                    <div class="cover-card-preview" id="leftCoverCanvas"></div>
+                </div>
+
+                <!-- MAIN FOCUSED JOURNAL -->
+                <div class="carousel-main" id="mainCoverButton">
+                    <div class="main-journal-card" id="mainCover"></div>
+                    <button class="edit-cover-pill" id="editCoverButton" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        Edit cover
+                    </button>
+                </div>
+
+                <!-- NEXT JOURNAL -->
+                <div class="carousel-peek peek-right hidden-preview" id="rightCover">
+                    <div class="cover-card-preview" id="rightCoverCanvas"></div>
+                </div>
+            </div>
+
+            <!-- GRID SHELF VIEW (TOGGLED BY GRID BUTTON) -->
+            <div class="shelf-grid-view hidden" id="shelfGridView"></div>
+
+            <!-- CAROUSEL ARROWS -->
+            <div class="carousel-nav-arrows" id="carouselNavArrows">
+                <button class="arrow-btn" id="previousJournal" type="button" aria-label="Previous Journal">‹</button>
+                <button class="arrow-btn" id="nextJournal" type="button" aria-label="Next Journal">›</button>
+            </div>
+
+            <!-- BOTTOM FLOATING ACTION DOCK -->
+            <div class="shelf-bottom-dock">
+                <button class="dock-circle-btn" id="moreOptionsButton" title="Settings / Rename" type="button">⋯</button>
+                <button class="dock-circle-btn" id="exportButton" title="Export / Share JSON" type="button">⇪</button>
+                <button class="dock-circle-btn" id="importButton" title="Import Journal JSON" type="button">📥</button>
+                <button class="dock-circle-btn" id="deleteButton" title="Delete Journal" type="button">🗑</button>
+                <button class="dock-circle-btn" id="addJournalButton" title="Add Journal" type="button">＋</button>
+            </div>
+
+            <div class="journal-indicator" id="journalPosition">1 / 1</div>
+        </main>
+    </section>
+
+    <!-- =====================================================
+         OPENED JOURNAL (SPREAD COLLAGE VIEW)
+    ====================================================== -->
+    <section class="view journal-view hidden" id="journalView">
+
+        <!-- HEADER -->
+        <header class="opened-view-topbar">
+            <button class="back-link" id="backButton" type="button">
+                ‹ Back
+            </button>
+            <div class="opened-center-meta">
+                <h2 id="openedJournalTitle">Journal</h2>
+                <p id="openedJournalPageCount">⊘ 0 Pages</p>
+            </div>
+            <div class="opened-view-actions">
+                <button class="nav-circle-btn" id="exportSpreadPngBtn" title="Export Spread as Image (PNG)" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                </button>
+                <button class="nav-circle-btn" id="journalSearchButton" title="Search this journal" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- DRAWING CONTROLS SUB-BAR -->
+        <div class="draw-toolbar hidden" id="drawToolbar">
+            <span class="draw-label">Stylus Mode</span>
+            <input type="color" id="drawColorPicker" value="#2b2520" title="Pen Color">
+            <input type="range" id="drawSizeSlider" min="1" max="15" value="3" title="Pen Width">
+            <button class="draw-tool-btn" id="clearDrawingBtn" type="button">Clear Inks</button>
+        </div>
+
+        <!-- SEARCH INPUT -->
+        <div class="journal-search-bar hidden" id="journalSearch">
+            <input id="journalSearchInput" type="search" placeholder="Search pages..." autocomplete="off">
+            <button id="closeJournalSearch" type="button">×</button>
+        </div>
+
+        <!-- SPREAD ZOOM / PAN WRAPPER -->
+        <div class="spread-viewport" id="spreadViewport">
+            <!-- FLOATING ZOOM CONTROLS -->
+            <div class="zoom-floating-bar">
+                <button class="zoom-btn" id="zoomOutBtn" type="button" title="Zoom Out">−</button>
+                <span class="zoom-level-text" id="zoomLevelText">100%</span>
+                <button class="zoom-btn" id="zoomInBtn" type="button" title="Zoom In">＋</button>
+                <button class="zoom-btn" id="zoomResetBtn" type="button" title="Reset View">↺</button>
+            </div>
+
+            <!-- 3D BOOK SPREAD -->
+            <div class="spread-stage">
+                <button class="spread-arrow" id="previousPage" type="button">‹</button>
+
+                <div class="book-spread-container" id="bookSpreadContainer">
+                    <div class="book-spread" id="interactiveBook">
+                        <article class="spread-page left-page" id="leftPage">
+                            <canvas class="page-draw-canvas" id="leftDrawCanvas"></canvas>
+                        </article>
+                        <div class="spread-spine"></div>
+                        <article class="spread-page right-page" id="rightPage">
+                            <canvas class="page-draw-canvas" id="rightDrawCanvas"></canvas>
+                        </article>
+                    </div>
+                </div>
+
+                <button class="spread-arrow" id="nextPage" type="button">›</button>
+            </div>
+        </div>
+
+        <div class="page-position" id="pagePosition">1 / 1</div>
+
+        <!-- OPEN SPREAD FLOATING BOTTOM TOOLBAR -->
+        <nav class="spread-dock">
+            <button class="spread-dock-btn" id="dockAddPage" type="button" title="Add Page">＋</button>
+            <button class="spread-dock-btn" id="dockAddImage" type="button" title="Add Photo / Cutout">🖼️</button>
+            <button class="spread-dock-btn" id="dockAddSticker" type="button" title="Stickers">🏷️</button>
+            <button class="spread-dock-btn" id="dockAddText" type="button" title="Add Text Note">✎</button>
+            <button class="spread-dock-btn" id="dockToggleDraw" type="button" title="Toggle Drawing Stylus">✏️</button>
+            <button class="spread-dock-btn" id="dockTemplates" type="button" title="Page Templates">📐</button>
+        </nav>
+    </section>
+
+    <!-- =====================================================
+         STICKER DRAWER MODAL
+    ====================================================== -->
+    <div class="modal hidden" id="stickerModal">
+        <div class="modal-backdrop" id="stickerModalBackdrop"></div>
+        <div class="modal-card">
+            <button class="modal-close" id="closeStickerModal" type="button">×</button>
+            <p class="modal-eyebrow">Studio</p>
+            <h2>Stickers & Cutouts</h2>
+            <div class="sticker-grid" id="stickerGrid"></div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         TEMPLATES MODAL
+    ====================================================== -->
+    <div class="modal hidden" id="templatesModal">
+        <div class="modal-backdrop" id="templatesModalBackdrop"></div>
+        <div class="modal-card">
+            <button class="modal-close" id="closeTemplatesModal" type="button">×</button>
+            <p class="modal-eyebrow">Studio Layouts</p>
+            <h2>Spread Templates</h2>
+            <div class="templates-grid">
+                <button class="template-item-btn" data-template="travel" type="button">
+                    <span class="tpl-icon">🗺️</span>
+                    <strong>Travel Scrapbook</strong>
+                    <small>Polaroids, stamp & heading</small>
+                </button>
+                <button class="template-item-btn" data-template="editorial" type="button">
+                    <span class="tpl-icon">📰</span>
+                    <strong>Film & Music Review</strong>
+                    <small>Editorial fonts & notes</small>
+                </button>
+                <button class="template-item-btn" data-template="minimal" type="button">
+                    <span class="tpl-icon">☕</span>
+                    <strong>Daily Coffee Log</strong>
+                    <small>Minimalist polaroids</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         TYPOGRAPHY STUDIO MODAL
+    ====================================================== -->
+    <div class="modal hidden" id="pageTextModal">
+        <div class="modal-backdrop" id="pageTextBackdrop"></div>
+        <div class="modal-card">
+            <button class="modal-close" id="closePageTextModal" type="button">×</button>
+            <p class="modal-eyebrow">Typography</p>
+            <h2>Add text</h2>
+
+            <label class="form-field">
+                <span>Text or Heading</span>
+                <textarea id="pageTextInput" placeholder="Write something..." maxlength="350"></textarea>
+            </label>
+
+            <div class="font-selector">
+                <span>Select Font</span>
+                <div class="font-options" id="fontOptions">
+                    <button type="button" class="font-option-btn selected" data-font="font-handwriting">
+                        <strong style="font-family:'Caveat', cursive; font-size:20px;">Handwriting</strong>
+                    </button>
+                    <button type="button" class="font-option-btn" data-font="font-typewriter">
+                        <strong style="font-family:'Special Elite', monospace; font-size:15px;">Typewriter</strong>
+                    </button>
+                    <button type="button" class="font-option-btn" data-font="font-editorial">
+                        <strong style="font-family:'Playfair Display', serif; font-style:italic; font-size:17px;">Editorial</strong>
+                    </button>
+                </div>
+            </div>
+
+            <button class="modal-submit" id="savePageText" type="button">Place on Page</button>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         NEW / EDIT JOURNAL MODAL
+    ====================================================== -->
+    <div class="modal hidden" id="newJournalModal">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-card">
+            <button class="modal-close" id="closeNewJournalModal" type="button">×</button>
+            <p class="modal-eyebrow">Pocket Pixels</p>
+            <h2 id="journalModalTitle">New Journal</h2>
+
+            <form id="newJournalForm">
+                <label class="form-field">
+                    <span>Journal Name</span>
+                    <input type="text" id="journalName" placeholder="Give it a name..." maxlength="80" required>
+                </label>
+
+                <label class="form-field">
+                    <span>Description (Optional)</span>
+                    <textarea id="journalDescription" placeholder="A little something about this journal..." maxlength="250"></textarea>
+                </label>
+
+                <div class="cover-colour-field">
+                    <span>Cover Colour</span>
+                    <div class="cover-options" id="coverOptions"></div>
+                    <div class="colour-required-message" id="colourRequiredMessage">Please choose a cover colour.</div>
+                </div>
+
+                <button class="modal-submit" id="journalSubmitButton" type="submit">Create Journal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         COVER EDITOR MODAL
+    ====================================================== -->
+    <div class="modal cover-editor-modal hidden" id="coverEditorModal">
+        <div class="modal-backdrop" id="coverEditorBackdrop"></div>
+        <div class="cover-editor">
+            <header class="cover-editor-header">
+                <h2>Edit Cover</h2>
+                <button class="modal-close" id="closeCoverEditor" type="button">×</button>
+            </header>
+
+            <div class="cover-editor-workspace">
+                <div class="cover-canvas" id="coverCanvas"></div>
+            </div>
+
+            <div class="cover-editor-toolbar">
+                <button id="addCoverText" type="button"><strong>T</strong><span>Text</span></button>
+                <button id="addCoverImage" type="button"><strong>◫</strong><span>Image</span></button>
+                <button id="changeCoverColour" type="button"><strong>◐</strong><span>Colour</span></button>
+            </div>
+
+            <div class="editor-cover-colour-palette" id="editorCoverColourPalette"></div>
+
+            <footer class="cover-editor-footer">
+                <button class="secondary-button" id="cancelCoverChanges" type="button">Cancel</button>
+                <button class="primary-button" id="saveCoverChanges" type="button">Save changes</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- HIDDEN FILE INPUTS -->
+    <input type="file" id="coverImageInput" accept="image/*" class="hidden">
+    <input type="file" id="pageImageInput" accept="image/*" class="hidden">
+    <input type="file" id="importJsonInput" accept=".json,application/json" class="hidden">
+
+    <!-- ADD TEXT MODAL (FOR COVER) -->
+    <div class="modal hidden" id="coverTextModal">
+        <div class="modal-backdrop" id="coverTextBackdrop"></div>
+        <div class="modal-card small-modal">
+            <button class="modal-close" id="closeCoverTextModal" type="button">×</button>
+            <h2>Add text</h2>
+            <label class="form-field">
+                <textarea id="coverTextInput" placeholder="Write something..." maxlength="300"></textarea>
+            </label>
+            <button class="modal-submit" id="saveCoverText" type="button">Done</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
